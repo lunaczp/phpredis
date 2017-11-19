@@ -845,7 +845,7 @@ redis_connect(INTERNAL_FUNCTION_PARAMETERS, int persistent)
     redis->sock = redis_sock_create(host, host_len, port, timeout, read_timeout, persistent,
         persistent_id, retry_interval, 0);/*lux 此步只是创建并初始化一个redis socket对象，并没有绑定底层的stream*/
 
-    if (redis_sock_server_open(redis->sock TSRMLS_CC) < 0) {/*lux 创建此层stream对象，并索引到redis socket对象中*/
+    if (redis_sock_server_open(redis->sock TSRMLS_CC) < 0) {/*lux 创建底层stream对象，并记录到redis socket对象中*/
         redis_free_socket(redis->sock);
         redis->sock = NULL;
         return FAILURE;

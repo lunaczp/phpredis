@@ -1404,7 +1404,7 @@ redis_sock_create(char *host, int host_len, unsigned short port,
  * redis_sock_connect
  */
 PHP_REDIS_API int redis_sock_connect(RedisSock *redis_sock TSRMLS_DC)
-{
+{/*lux 调用php底层函数创建stream对象，并设置选项*/
     struct timeval tv, read_tv, *tv_ptr = NULL;
     char host[1024], *persistent_id = NULL;
     const char *fmtstr = "%s:%d";
