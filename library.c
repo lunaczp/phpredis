@@ -1450,7 +1450,7 @@ PHP_REDIS_API int redis_sock_connect(RedisSock *redis_sock TSRMLS_DC)
                 redis_sock->timeout);
         }
     }
-	/*lux 创建socket*/
+	/*lux 创建stream*/
     redis_sock->stream = php_stream_xport_create(host, host_len,
         0, STREAM_XPORT_CLIENT | STREAM_XPORT_CONNECT,
         persistent_id, tv_ptr, NULL, NULL, &err);
@@ -1462,7 +1462,7 @@ PHP_REDIS_API int redis_sock_connect(RedisSock *redis_sock TSRMLS_DC)
     if (!redis_sock->stream) {
         return -1;
     }
-
+	/*lux 配置参数*/
     /* set TCP_NODELAY */
     sock = (php_netstream_data_t*)redis_sock->stream->abstract;
     setsockopt(sock->socket, IPPROTO_TCP, TCP_NODELAY, (char *) &tcp_flag,
@@ -1505,7 +1505,7 @@ redis_sock_server_open(RedisSock *redis_sock TSRMLS_DC)
  * redis_sock_disconnect
  */
 PHP_REDIS_API int redis_sock_disconnect(RedisSock *redis_sock TSRMLS_DC)
-{
+{/*lux 关闭socket连接。但如果是persistent，则不关闭底层streem（底层资源以后可以复用，比如重新new Redis，在此建立连接的时候）*/
     if (redis_sock == NULL) {
         return 1;
     }
