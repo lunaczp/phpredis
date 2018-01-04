@@ -1450,7 +1450,7 @@ PHP_REDIS_API int redis_sock_connect(RedisSock *redis_sock TSRMLS_DC)
                 redis_sock->timeout);
         }
     }
-	/*lux 创建stream*/
+	/*lux 创建php stream，成功则完成建立socket，connect操作*/
     redis_sock->stream = php_stream_xport_create(host, host_len,
         0, STREAM_XPORT_CLIENT | STREAM_XPORT_CONNECT,
         persistent_id, tv_ptr, NULL, NULL, &err);
@@ -1472,8 +1472,8 @@ PHP_REDIS_API int redis_sock_connect(RedisSock *redis_sock TSRMLS_DC)
 
     if (read_tv.tv_sec != 0 || read_tv.tv_usec != 0) {
         php_stream_set_option(redis_sock->stream,PHP_STREAM_OPTION_READ_TIMEOUT,
-            0, &read_tv);
-    }
+            0, &read_tv);/*设置读操作超时，对应底层的setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout)) */
+    }/*lux 如果不设置，则默认不超时，参见：http://pubs.opengroup.org/onlinepubs/009695399/functions/setsockopt.html */
     php_stream_set_option(redis_sock->stream,
         PHP_STREAM_OPTION_WRITE_BUFFER, PHP_STREAM_BUFFER_NONE, NULL);
 

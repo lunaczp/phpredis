@@ -524,7 +524,7 @@ redis_sock_get_instance(zval *id TSRMLS_DC, int no_throw)
     }
     // Throw an exception unless we've been requested not to
     if (!no_throw) {
-        zend_throw_exception(redis_exception_ce, "Redis server went away", 0 TSRMLS_CC);
+        zend_throw_exception(redis_exception_ce, "Redis server went away", 0 TSRMLS_CC);/*lux redis server went away*/
     }
     return NULL;
 }
@@ -783,7 +783,7 @@ PHP_METHOD(Redis, pconnect)
 
 PHP_REDIS_API int
 redis_connect(INTERNAL_FUNCTION_PARAMETERS, int persistent)
-{
+{/*lux connect*/
     zval *object;
     char *host = NULL, *persistent_id = NULL;
     zend_long port = -1, retry_interval = 0;
