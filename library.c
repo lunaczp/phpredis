@@ -1418,7 +1418,7 @@ PHP_REDIS_API int redis_sock_connect(RedisSock *redis_sock TSRMLS_DC)
 
     tv.tv_sec  = (time_t)redis_sock->timeout;
     tv.tv_usec = (int)((redis_sock->timeout - tv.tv_sec) * 1000000);
-    if(tv.tv_sec != 0 || tv.tv_usec != 0) {
+    if(tv.tv_sec != 0 || tv.tv_usec != 0) {/*lux: 不为0才设置*/
         tv_ptr = &tv;
     }
 
@@ -1470,10 +1470,10 @@ PHP_REDIS_API int redis_sock_connect(RedisSock *redis_sock TSRMLS_DC)
 
     php_stream_auto_cleanup(redis_sock->stream);
 
-    if (read_tv.tv_sec != 0 || read_tv.tv_usec != 0) {
+    if (read_tv.tv_sec != 0 || read_tv.tv_usec != 0) {/*lux: 不为0才设置*/
         php_stream_set_option(redis_sock->stream,PHP_STREAM_OPTION_READ_TIMEOUT,
-            0, &read_tv);/*设置读操作超时，对应底层的setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout)) */
-    }/*lux 如果不设置，则默认不超时，参见：http://pubs.opengroup.org/onlinepubs/009695399/functions/setsockopt.html */
+            0, &read_tv);/*lux 设置读操作超时，最终会影响poll的tiemout */
+    }
     php_stream_set_option(redis_sock->stream,
         PHP_STREAM_OPTION_WRITE_BUFFER, PHP_STREAM_BUFFER_NONE, NULL);
 
